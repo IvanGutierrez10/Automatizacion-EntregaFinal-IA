@@ -11,9 +11,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-# Asegurar que existe el directorio de imágenes
-os.makedirs('images', exist_ok=True)
-
 # Cargar los datos
 df = pd.read_csv('data/synthetic_data.csv')
 
@@ -37,14 +34,13 @@ def create_features(df, window_size=5):
     features['level_caudal_ratio'] = df['level'] / df['caudal']
     features['level_caudal_diff'] = df['level'].diff() / df['caudal'].diff()
     
-    # Eliminar filas con NaN (debido al cálculo de medias móviles)
     features = features.dropna()
     
     return features
 
 # Crear características
 X = create_features(df)
-y = df['noise'].iloc[4:]  # Ajustamos el target para que coincida con las características
+y = df['noise'].iloc[4:]
 
 # Dividir los datos en conjuntos de entrenamiento y prueba
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
@@ -57,22 +53,18 @@ models = {
     'Logistic Regression': LogisticRegression(random_state=42)
 }
 
-# Diccionario para almacenar los resultados
 results = {}
 
 # Entrenar y evaluar cada modelo
 for name, model in models.items():
-    # Entrenar el modelo
+
     model.fit(X_train, y_train)
-    
-    # Realizar predicciones
     y_pred = model.predict(X_test)
     
     # Calcular métricas
     precision = precision_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
     
-    # Almacenar resultados
     results[name] = {
         'model': model,
         'precision': precision,

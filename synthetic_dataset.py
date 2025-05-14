@@ -20,7 +20,6 @@ target_level = 8.7  # nivel objetivo
 level_std = 0.1    # desviación estándar más pequeña para variaciones más controladas
 
 for i in range(1, n_samples):
-    # Generamos un cambio más controlado
     change = np.random.normal(loc=0, scale=level_std)
     
     # Calculamos la desviación del nivel objetivo
@@ -70,9 +69,7 @@ max_duration = 5  # Duración máxima de perturbaciones
 i = 1
 while i < n_samples:
     if np.random.random() < perturbation_prob:
-        # Generamos una perturbación
-        duration = np.random.randint(min_duration, max_duration + 1)  # Duración entre 2 y 5 muestras
-        
+        duration = np.random.randint(min_duration, max_duration + 1)
         for j in range(duration):
             if i + j < n_samples:
                 noise[i + j] = 1
@@ -90,12 +87,6 @@ df = pd.DataFrame({
     'level': level,
     'noise': noise
 })
-
-# Imprimir estadísticas de las perturbaciones
-print("\nEstadísticas de las perturbaciones generadas:")
-print(f"Total de muestras: {len(df)}")
-print(f"Muestras con perturbación: {df['noise'].sum()}")
-print(f"Porcentaje de perturbaciones: {(df['noise'].sum()/len(df))*100:.2f}%")
 
 # Visualización de los datos
 plt.figure(figsize=(12, 5))
